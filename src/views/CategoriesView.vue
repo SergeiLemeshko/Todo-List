@@ -1,22 +1,22 @@
 <template>
-  <div class="categories">
+  <div class='categories'>
     <CategoriesList/>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import CategoriesList from "@/components/CategoriesList.vue";
+<script lang='ts'>
+import { defineComponent } from 'vue';
+import CategoriesList from '@/components/CategoriesList.vue';
 
 export default defineComponent({
-  name: "CategoriesView",
+  name: 'CategoriesView',
   components: {
     CategoriesList,
   },
 });
 </script>
 
-<style scooped lang="scss">
+<style scooped lang='scss'>
 .categories {
   position: relative;
   flex-grow: 1;

@@ -38,7 +38,7 @@
     </section>
     <section class="todo-btns">
       <ButtonEdit :openMainModal="openMainModal" />
-      <ButtonDelete :itemId="item.id" @remove="confirmRemoveItem" />
+      <ButtonDelete :onDeleteItem="handleDeleteBtn" />
     </section>
   </li>
 </template>
@@ -73,6 +73,15 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+  },
+  setup(props) {
+    const handleDeleteBtn = () => {
+      props.confirmRemoveItem(props.item.id);
+    };
+
+    return {
+      handleDeleteBtn,
+    };
   },
 });
 </script>

@@ -3,21 +3,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ButtonDelete',
   props: {
-    itemId: {
-      type: Number,
-      required: true
-    }
+    onDeleteItem: {
+      type: Function,
+      required: true,
+    },
   },
-  emits: ['remove'],
-  setup(props, { emit }) {
+  setup(props) {
     const handleClick = () => {
-      emit('remove', props.itemId);
-    }
+      props.onDeleteItem();
+    };
 
     return { handleClick }
   }

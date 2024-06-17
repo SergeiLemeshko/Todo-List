@@ -1,22 +1,22 @@
 <template>
-  <div class="todo">
+  <div class='todo'>
     <TodoList/>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import TodoList from "@/components/TodoList.vue";
+<script lang='ts'>
+import { defineComponent } from 'vue';
+import TodoList from '@/components/TodoList.vue';
 
 export default defineComponent({
-  name: "TodoView",
+  name: 'TodoView',
   components: {
     TodoList,
   },
 });
 </script>
 
-<style scooped lang="scss">
+<style scooped lang='scss'>
 .todo {
   position: relative;
   flex-grow: 1;

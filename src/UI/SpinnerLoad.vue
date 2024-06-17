@@ -2,17 +2,17 @@
   <div class="spinner-container" v-if="isLoading">
     <div class="spinner">
       <div 
-        v-for="n in pointsCount" 
+        v-for="n, index in pointsCount" 
         :key="n" 
         class="point" 
-        :style="pointStyle()"
+        :style="pointStyle(index)"
       ></div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 
 export default defineComponent({
   name: 'SpinnerLoad',
@@ -25,18 +25,23 @@ export default defineComponent({
   setup() {
     const pointsCount = ref<number>(9); // Количество точек
 
+    // Вычисляем случайные значения задержки и длительности
+    const delays = computed(() =>
+      Array.from({ length: pointsCount.value }, () => `${Math.random() * 0.6}s`)
+    );
+    const durations = computed(() =>
+      Array.from({ length: pointsCount.value }, () => `${0.5 + Math.random() * 0.6}s`)
+    );
+
     type PointStyle = {
       animationDelay: string;
       animationDuration: string;
     };
 
-    const pointStyle = (): PointStyle => {
-      const delay = `${Math.random() * 0.6}s`; // случайная задержка
-      const duration = `${0.5 + Math.random() * 0.6}s`; // случайная продолжительность
-
+    const pointStyle = (index: number): PointStyle => {
       return {
-        animationDelay: delay,
-        animationDuration: duration
+        animationDelay: delays.value[index],
+        animationDuration: durations.value[index],
       };
     };
     

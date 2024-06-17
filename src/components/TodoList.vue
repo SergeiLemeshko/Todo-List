@@ -36,12 +36,21 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useMethodsStore, Task, Category } from "../store/useMethodsStore";
+import { Category, Task } from '@/interfaces/interfaces';
 import { useModalMainStore } from '../store/useModalMainStore';
-import TodoItem from "@/components/TodoItem.vue";
+import TodoItem from '@/components/TodoItem.vue';
 import ModalDelete from '@/UI/ModalDelete.vue';
 import ModalMain from '@/UI/ModalMain.vue';
 import SpinnerLoad from '@/UI/SpinnerLoad.vue';
+import { displayCategoriesOnTaskPage } from '@/composables/useDisplayCatOnTaskPage';
+import { fetchData, addElem, updateElem, deleteElem } from '@/services/apiRequests';
+import { 
+  GET_CATEGORIES,
+  GET_TASKS,
+  ADD_TASK,
+  REMOVE_TASK,
+  UPDATE_TASK
+} from '@/constants/constants';
 
 export default defineComponent({
   name: 'TodoList',
@@ -52,9 +61,7 @@ export default defineComponent({
     SpinnerLoad,
   },
   setup() {
-    const store = useMethodsStore();
     const modalStore = useModalMainStore();
-    const { fetchData, addElem, updateElem, deleteElem, displayCategories } = store;
     const { isModalOpen, isEditModalOpen } = storeToRefs(modalStore);
     const isLoading = ref<boolean>(false);
 
@@ -66,25 +73,21 @@ export default defineComponent({
 
     onMounted(async () => {
       isLoading.value = true;
-      todos.value = await fetchData<Task[]>("/GetTasks");
+      todos.value = await fetchData<Task[]>(GET_TASKS);
         if(todos.value) {
           setTimeout(function() {
           isLoading.value = false;
         }, 500);
       }
-      categories.value = await fetchData<Category[]>("/GetCategories");
-      displayCategories(todos.value, categories.value);
+      categories.value = await fetchData<Category[]>(GET_CATEGORIES);
+        displayCategoriesOnTaskPage(todos.value, categories.value);
     });
 
     // создание задачи
     const createTask = async (newTask: Omit<Task, 'id'>) => {
-      try {
-        const addedTask = await addElem<Task>(newTask, "/AddTask");
-        todos.value.push(addedTask);
-        displayCategories(todos.value, categories.value);
-      } catch (error) {
-        console.error("Ошибка при создании задачи:", error);
-      }
+      const addedTask = await addElem<Task>(newTask, ADD_TASK);
+      todos.value.push(addedTask);
+      displayCategoriesOnTaskPage(todos.value, categories.value);
     };
 
     // получаем id задачи и показываем модальное окно
@@ -97,7 +100,7 @@ export default defineComponent({
     // удаление задачи
     const removeTask = async () => {
       if (taskIdToDelete.value !== null) {
-        await deleteElem<Task>(taskIdToDelete.value, "/RemoveTask/");
+        await deleteElem<Task>(taskIdToDelete.value, REMOVE_TASK);
         todos.value = todos.value.filter(task => task.id !== taskIdToDelete.value);
         taskIdToDelete.value = null;
       }
@@ -109,7 +112,7 @@ export default defineComponent({
 
     // редактирование задачи
     const editTask = async (updatedTask: Task) => {
-      const responseTask = await updateElem<Task>(updatedTask, "/UpdateTask");
+      const responseTask = await updateElem<Task>(updatedTask, UPDATE_TASK);
       const index = todos.value.findIndex(t => t.id === updatedTask.id);
       if (index !== -1) {
         todos.value[index] = responseTask;

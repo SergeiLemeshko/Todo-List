@@ -25,12 +25,12 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType, computed, onMounted, onBeforeUnmount } from 'vue';
-import { Category } from "../store/useMethodsStore";
-import { useSelectClass } from '@/composables/useComposables';
+import { Category } from '@/interfaces/interfaces';
+import { useSelectClass } from '@/composables/useSelectClass';
 import TooltipText from '@/UI/TooltipText.vue';
 
 export default defineComponent({
-  name: 'CustomSelect',
+  name: 'CategorySelect',
   components: {
     TooltipText,
   },

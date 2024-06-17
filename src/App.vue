@@ -3,23 +3,23 @@
   <router-view/>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import HeaderSection from "@/components/HeaderSection.vue";
+<script lang='ts'>
+import { defineComponent } from 'vue';
+import HeaderSection from '@/components/HeaderSection.vue';
 
 export default defineComponent({
-  name: "App",
+  name: 'App',
   components: {
     HeaderSection,
   },
 });
 </script>
 
-<style lang="scss">
+<style lang='scss'>
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 #app {

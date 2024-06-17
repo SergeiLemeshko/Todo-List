@@ -29,9 +29,7 @@ export default defineComponent({
   },
   setup(props) {
     const handleClick = () => {
-      if (props.onClick) {
-        props.onClick();
-      }
+      props.onClick?.();
     };
 
     const buttonClass = computed(() => {

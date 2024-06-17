@@ -22,7 +22,7 @@
           </div>
           <div v-if="currentPageTodo">
             <span class="categorie-medium">Категория</span>
-            <CustomSelect 
+            <CategorySelect 
               v-model="categoryId" 
               :categories="categories" 
             />
@@ -53,19 +53,26 @@
 import { defineComponent, ref, computed, onMounted, PropType } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useModalMainStore } from '../store/useModalMainStore';
-import { useMethodsStore, Category } from "../store/useMethodsStore";
-import { useNameValidation, useDescriptionValidation } from '@/composables/useComposables';
-import CustomSelect from "@/UI/CustomSelect.vue";
+import { useModalMainStore } from '@/store/useModalMainStore';
+import { Category } from '@/interfaces/interfaces';
+import { useNameValidation, useDescriptionValidation } from '@/composables/useValidation';
+import CategorySelect from '@/UI/CategorySelect.vue';
 import ButtonClose from '@/UI/ButtonClose.vue';
 import ButtonMain from '@/UI/ButtonMain.vue';
+import { fetchData } from '@/services/apiRequests';
+import { 
+  DESCRIPTION_MAX_LENGTH, 
+  CATEGORY_DESCRIPTION_MAX_LENGTH,
+  GET_CATEGORIES,
+  PAGE_CATEGORIES
+} from '@/constants/constants';
 
 export default defineComponent({
   name: 'ModalMain',
   components: {
     ButtonClose,
     ButtonMain,
-    CustomSelect,
+    CategorySelect,
   },
   props: {
     title: {
@@ -83,9 +90,7 @@ export default defineComponent({
   },
   setup(props) {
     const route = useRoute();
-    const store = useMethodsStore();
     const modalStore = useModalMainStore();
-    const { fetchData } = store;
     const { closeMainModal } = modalStore;
     const { isModalOpen, isEditModalOpen } = storeToRefs(modalStore);
 
@@ -98,7 +103,7 @@ export default defineComponent({
     const { isInvalidDesc, validateDescription } = useDescriptionValidation();
 
     onMounted(async () => {
-      categories.value = await fetchData<Category[]>("/GetCategories");
+      categories.value = await fetchData<Category[]>(GET_CATEGORIES);
     });
 
     // отправка формы
@@ -132,11 +137,11 @@ export default defineComponent({
     };
 
     // для отображения или скрытия поля "Категория" в модальном окне
-    const currentPageTodo = computed(() => route.path !== "/categories");
+    const currentPageTodo = computed(() => route.path !== PAGE_CATEGORIES);
 
-    const namePlaceholder = computed(() => route.path !== "/categories" ? "Введите имя задачи" : 'Введите имя категории');
+    const namePlaceholder = computed(() => route.path !== PAGE_CATEGORIES ? "Введите имя задачи" : 'Введите имя категории');
 
-    const descriptionPlaceholder = computed(() => route.path !== "/categories" ? "Введите описание задачи" : 'Введите описание категории');
+    const descriptionPlaceholder = computed(() => route.path !== PAGE_CATEGORIES ? "Введите описание задачи" : 'Введите описание категории');
 
     // валидация поля "Имя"
     const validateNameField = (): void => {
@@ -147,7 +152,7 @@ export default defineComponent({
       validateDescription(description.value);
     };
 
-    const numOfCharacters = computed(() => route.path !== "/categories" ? "1536" : '512');
+    const numOfCharacters = computed(() => route.path !== PAGE_CATEGORIES ? DESCRIPTION_MAX_LENGTH : CATEGORY_DESCRIPTION_MAX_LENGTH);
 
     return {
       id,

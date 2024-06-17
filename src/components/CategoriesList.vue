@@ -36,12 +36,19 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useMethodsStore, Category } from "../store/useMethodsStore";
-import { useModalMainStore } from '../store/useModalMainStore';
-import TodoItem from "@/components/TodoItem.vue";
+import { Category } from '@/interfaces/interfaces';
+import { useModalMainStore } from '@/store/useModalMainStore';
+import TodoItem from '@/components/TodoItem.vue';
 import ModalDelete from '@/UI/ModalDelete.vue';
 import ModalMain from '@/UI/ModalMain.vue';
 import SpinnerLoad from '@/UI/SpinnerLoad.vue';
+import { fetchData, addElem, updateElem, deleteElem } from '@/services/apiRequests';
+import { 
+  GET_CATEGORIES,
+  ADD_CATEGORY,
+  REMOVE_CATEGORY,
+  UPDATE_CATEGORY
+} from '@/constants/constants';
 
 export default defineComponent({
   name: "CategoriesList",
@@ -52,9 +59,7 @@ export default defineComponent({
     SpinnerLoad,
   },
   setup() {
-    const store = useMethodsStore();
     const modalStore = useModalMainStore();
-    const { fetchData, addElem, updateElem, deleteElem } = store;
     const { isModalOpen, isEditModalOpen } = storeToRefs(modalStore);
 
     const categories = ref<Category[]>([]);
@@ -65,7 +70,7 @@ export default defineComponent({
 
     onMounted(async () => {
       isLoading.value = true;
-      categories.value = await fetchData<Category[]>("/GetCategories");
+      categories.value = await fetchData<Category[]>(GET_CATEGORIES);
         if(categories.value) {
           setTimeout(function() {
           isLoading.value = false;
@@ -76,12 +81,12 @@ export default defineComponent({
     // создание категории
     const createCategorie = async (newCategorie: Omit<Category, 'id'>) => {
       try {
-        const addedCategorie = await addElem<Category>(newCategorie, "/AddCategory");
+        const addedCategorie = await addElem<Category>(newCategorie, ADD_CATEGORY);
           categories.value.push(addedCategorie);
-        } catch (error) {
-          console.error("Ошибка при создании категории:", error);
-        }
-      };
+      } catch (error) {
+        console.error("Ошибка при создании категории:", error);
+      }
+    };
 
     // получаем id категории и показываем модальное окно
     const confirmRemoveCategorie = (categorieId: number) => {
@@ -93,7 +98,7 @@ export default defineComponent({
     // удаление категории
     const removeCategorie = async () => {
       if (categorieIdToDelete.value !== null) {
-        await deleteElem<Category>(categorieIdToDelete.value, "/RemoveCategory/");
+        await deleteElem<Category>(categorieIdToDelete.value, REMOVE_CATEGORY);
         categories.value = categories.value.filter(cat => cat.id !== categorieIdToDelete.value);
         categorieIdToDelete.value = null;
       }
@@ -105,7 +110,7 @@ export default defineComponent({
 
     // редактирование категории
     const editCategory = async (updatedCategory: Category) => {
-      const responseCategory = await updateElem<Category>(updatedCategory, "/UpdateCategory");
+      const responseCategory = await updateElem<Category>(updatedCategory, UPDATE_CATEGORY);
       const index = categories.value.findIndex(c => c.id === updatedCategory.id);
       if (index !== -1) {
         categories.value[index] = responseCategory;

@@ -3,10 +3,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { useModalMainStore } from '../store/useModalMainStore';
+import { defineComponent, PropType } from 'vue';
+import { useModalMainStore } from '@/store/useModalMainStore';
 import { storeToRefs } from 'pinia';
-import { useBodyClass } from '@/composables/useComposables';
+import { useBodyClass } from '@/composables/useBodyClass';
 
 export default defineComponent({
   name: 'ButtonEdit',

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { useBodyClass } from '@/composables/useComposables';
+import { useBodyClass } from '@/composables/useBodyClass';
 
 export const useModalMainStore = defineStore('modalMain', () => {
   const isModalOpen = ref<boolean>(false);

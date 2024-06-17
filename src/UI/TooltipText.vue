@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType, ref } from 'vue';
+import { TruncateLength } from '@/enums/enums';
 
 export default defineComponent({
   name: 'TooltipText',
@@ -41,12 +42,13 @@ export default defineComponent({
   setup(props) {
     // контролирует отображение всплывающего окна
     const showTooltipWindow = ref<boolean>(false);
+    
     // определяет, нужно ли обрезать текст
     const shouldTruncate = computed(() => {
-      if ((props.isShort || props.isShortCat || props.isMedium) && props.text.length >= 20) {
+      if ((props.isShort || props.isShortCat || props.isMedium) && props.text.length >= TruncateLength.ShortCat) {
         return true;
       }
-      return props.text.length >= 60;
+      return props.text.length >= TruncateLength.Default;
     });
 
     // возвращающее либо полный текст, либо обрезанный с многоточием
@@ -54,13 +56,13 @@ export default defineComponent({
       if (shouldTruncate.value) {
         switch (true) {
           case props.isMedium:
-            return `${props.text.slice(0, 48)}...`;
+            return `${props.text.slice(0, TruncateLength.Medium)}...`;
           case props.isShort:
-            return `${props.text.slice(0, 29)}...`;
+            return `${props.text.slice(0, TruncateLength.Short)}...`;
           case props.isShortCat:
-            return `${props.text.slice(0, 20)}...`;
+            return `${props.text.slice(0, TruncateLength.ShortCat)}...`;
           default:
-            return `${props.text.slice(0, 60)}...`;
+            return `${props.text.slice(0, TruncateLength.Default)}...`;
         }
       }
       return props.text;

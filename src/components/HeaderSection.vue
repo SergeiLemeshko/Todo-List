@@ -2,23 +2,24 @@
   <section class="header">
     <h1 class="header-logo">ToDo List</h1>
     <nav class="header-nav">
-      <router-link to="/" :class="{'active-link': currentBtn, 'line': true}">Задачи</router-link>
+      <router-link to="/" :class="{'active-link': currentPageTodo, 'line': true}">Задачи</router-link>
       <div class="header-divider"></div>
-      <router-link to="/categories" :class="{'active-link': !currentBtn, 'line': true}">Категории</router-link>
+      <router-link to="/categories" :class="{'active-link': !currentPageTodo, 'line': true}">Категории</router-link>
     </nav>
     <div class="header-btns">
-      <button-add v-if="currentBtn" :onClick="openMainModal">Добавить задачу</button-add>
+      <button-add v-if="currentPageTodo" :onClick="openMainModal">Добавить задачу</button-add>
       <button-add v-else :onClick="openMainModal">Добавить категорию</button-add>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
-import { useModalMainStore } from '../store/useModalMainStore';
+import { useModalMainStore } from '@/store/useModalMainStore';
 import ButtonAdd from '@/UI/ButtonAdd.vue';
+import { PAGE_CATEGORIES } from '@/constants/constants';
 
 export default defineComponent({
   name: "HeaderSection",
@@ -36,10 +37,10 @@ export default defineComponent({
     }
 
     // для отображения кнопок добавить задачу/категорию
-    const currentBtn = computed(() => route.path !== "/categories");
+    const currentPageTodo = computed(() => route.path !== PAGE_CATEGORIES);
 
     return { 
-      currentBtn,
+      currentPageTodo,
       isModalOpen,
       openMainModal,
     }
