@@ -1,4 +1,5 @@
 import request from '@/services/apiService';
+import { Category } from '@/interfaces/interfaces';
 
 // получение категорий или задач
 export async function fetchData<T>(path: string): Promise<T> {
@@ -6,7 +7,7 @@ export async function fetchData<T>(path: string): Promise<T> {
 }
 
 // добавление категорий или задач
-export async function addElem<T extends { id: number; name: string; description: string }>(
+export async function addElem<T extends Category>(
   newEntity: Omit<T, 'id'>,
   path: string
 ): Promise<T> {
@@ -14,7 +15,7 @@ export async function addElem<T extends { id: number; name: string; description:
 }
 
 // обновление категорий или задач
-export async function updateElem<T extends { id: number; name: string; description: string }>(
+export async function updateElem<T extends Category>(
   updatedResource: T,
   path: string
 ): Promise<T> {

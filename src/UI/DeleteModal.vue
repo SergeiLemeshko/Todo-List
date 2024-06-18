@@ -1,0 +1,109 @@
+<template>
+  <div v-if='isVisible' class='modal-overlay'>
+    <div class='modal-content'>
+      <div class='modal-content__header'>
+        <h3>{{ title }}</h3>
+        <CloseButton :onClick='cancel' />
+      </div>
+      <div class='question'>
+        <TooltipText :text='message' :isMedium='true'>
+          <p>{{ message }}</p>
+        </TooltipText>
+      </div>
+      <div class='modal-content__buttons'>
+        <MainButton size='small' color='blue' :onClick='confirm'>Да</MainButton>
+        <MainButton size='small' color='white' :onClick='cancel'>Нет</MainButton>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang='ts'>
+import { defineProps, defineExpose, ref } from 'vue';
+import { useBodyClass } from '@/composables/useBodyClass';
+import CloseButton from '@/UI/CloseButton.vue';
+import MainButton from '@/UI/MainButton.vue';
+import TooltipText from '@/UI/TooltipText.vue';
+
+const props = defineProps<{
+  title: string;
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}>();
+
+const isVisible = ref<boolean>(false);
+
+const show = (): void => {
+  isVisible.value = true;
+};
+
+const hide = (): void => {
+  isVisible.value = false;
+};
+
+const confirm = (): void => {
+  props.onConfirm();
+  hide();
+};
+
+const cancel = (): void => {
+  props.onCancel();
+  hide();
+};
+
+defineExpose({
+  show,
+  hide
+});
+
+// предотвращает возможность взаимодействия со списком под модальным окном
+useBodyClass(isVisible);
+</script>
+
+<style scoped lang='scss'>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.modal-content {
+  width: 600px;
+  height: 238px;
+  background: #DBE2EF;
+  border-radius: 4px;
+}
+
+.modal-content__header {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0px 39px 0px;
+
+  & h3 {
+    font-size: 40px;
+    font-weight: 500;
+    color: #3F72AF;
+  }
+}
+
+.question {
+  font-size: 20px;
+  text-align: left;
+  letter-spacing: normal;
+  letter-spacing: -1.1px;
+}
+
+.modal-content__buttons {
+  display: flex;
+  margin: 25px 0px 0px 0px;
+  justify-content: end;
+}
+</style>

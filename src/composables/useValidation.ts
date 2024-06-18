@@ -8,7 +8,7 @@ import {
   PAGE_CATEGORIES
 } from '@/constants/constants';
 
-// валидация поля "Имя"
+// валидация поля 'Имя'
 export const useNameValidation = () => {
   const isInvalidName = ref<boolean>(false);
 
@@ -26,7 +26,7 @@ export const useNameValidation = () => {
   return { isInvalidName, validateName };
 };
 
-// валидация поля "Описание"
+// валидация поля 'Описание'
 export const useDescriptionValidation = () => {
   const route = useRoute();
   const isInvalidDesc = ref<boolean>(false);

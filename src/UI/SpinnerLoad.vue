@@ -1,56 +1,47 @@
 <template>
-  <div class="spinner-container" v-if="isLoading">
-    <div class="spinner">
+  <div class='spinner-container' v-if='props.isLoading'>
+    <div class='spinner'>
       <div 
-        v-for="n, index in pointsCount" 
-        :key="n" 
-        class="point" 
-        :style="pointStyle(index)"
+        v-for='n, index in pointsCount' 
+        :key='n' 
+        class='point' 
+        :style='pointStyle(index)'
       ></div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+<script setup lang='ts'>
+import { defineProps, ref, computed } from 'vue';
 
-export default defineComponent({
-  name: 'SpinnerLoad',
-  props: {
-    isLoading: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup() {
-    const pointsCount = ref<number>(9); // Количество точек
+const props = defineProps<{
+  isLoading: boolean;
+}>();
 
-    // Вычисляем случайные значения задержки и длительности
-    const delays = computed(() =>
-      Array.from({ length: pointsCount.value }, () => `${Math.random() * 0.6}s`)
-    );
-    const durations = computed(() =>
-      Array.from({ length: pointsCount.value }, () => `${0.5 + Math.random() * 0.6}s`)
-    );
+const pointsCount = ref<number>(9); // Количество точек
 
-    type PointStyle = {
-      animationDelay: string;
-      animationDuration: string;
-    };
+// Вычисляем случайные значения задержки и длительности
+const delays = computed(() =>
+  Array.from({ length: pointsCount.value }, () => `${Math.random() * 0.6}s`)
+);
+const durations = computed(() =>
+  Array.from({ length: pointsCount.value }, () => `${0.5 + Math.random() * 0.6}s`)
+);
 
-    const pointStyle = (index: number): PointStyle => {
-      return {
-        animationDelay: delays.value[index],
-        animationDuration: durations.value[index],
-      };
-    };
-    
-    return { pointsCount, pointStyle };
-  }
-});
+type PointStyle = {
+  animationDelay: string;
+  animationDuration: string;
+};
+
+const pointStyle = (index: number): PointStyle => {
+  return {
+    animationDelay: delays.value[index],
+    animationDuration: durations.value[index],
+  };
+};
 </script>
 
-<style scoped lang="scss">
+<style scoped lang='scss'>
 .spinner-container {
   display: flex;
   justify-content: center;

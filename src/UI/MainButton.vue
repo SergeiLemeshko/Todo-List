@@ -1,61 +1,45 @@
 <template>
   <button 
-    type="button" 
-    :class="[buttonClass, colorClass]"
-    @click="handleClick"
+    type='button' 
+    :class='[buttonClass, colorClass]'
+    @click='handleClick'
   >
     <slot></slot>
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed } from 'vue';
+<script setup lang='ts'>
+import { defineProps, withDefaults, computed } from 'vue';
 
-export default defineComponent({
-  name: 'ButtonMain',
-  props: {
-    onClick: {
-      type: Function as PropType<() => void>,
-      required: false,
-    },
-    size: {
-      type: String as PropType<'small' | 'medium'>,
-      default: 'medium',
-    },
-    color: {
-      type: String as PropType<'blue' | 'white' >,
-      default: 'blue',
-    },
-  },
-  setup(props) {
-    const handleClick = () => {
-      props.onClick?.();
-    };
+const props = withDefaults(defineProps<{
+  onClick?: () => void;
+  size?: 'small' | 'medium';
+  color?: 'blue' | 'white';
+}>(), {
+  size: 'medium',
+  color: 'blue'
+});
 
-    const buttonClass = computed(() => {
-      return {
-        'btn-small': props.size === 'small',
-        'btn-medium': props.size === 'medium',
-      };
-    });
+const handleClick = () => {
+  props.onClick?.();
+};
 
-    const colorClass = computed(() => {
-      return {
-        'btn-blue': props.color === 'blue',
-        'btn-white': props.color === 'white',
-      };
-    });
+const buttonClass = computed(() => {
+  return {
+    'btn-small': props.size === 'small',
+    'btn-medium': props.size === 'medium',
+  };
+});
 
-    return {
-      handleClick,
-      buttonClass,
-      colorClass,
-    };
-  },
+const colorClass = computed(() => {
+  return {
+    'btn-blue': props.color === 'blue',
+    'btn-white': props.color === 'white',
+  };
 });
 </script>
 
-<style scoped lang="scss">
+<style scoped lang='scss'>
   .btn-small {
     height: 46px;
     width: 120px;

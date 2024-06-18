@@ -1,54 +1,40 @@
 <template>
-  <section class="header">
-    <h1 class="header-logo">ToDo List</h1>
-    <nav class="header-nav">
-      <router-link to="/" :class="{'active-link': currentPageTodo, 'line': true}">Задачи</router-link>
-      <div class="header-divider"></div>
-      <router-link to="/categories" :class="{'active-link': !currentPageTodo, 'line': true}">Категории</router-link>
+  <section class='header'>
+    <h1 class='header-logo'>ToDo List</h1>
+    <nav class='header-nav'>
+      <RouterLink to='/' :class="{'active-link': currentPageTodo, 'line': true}">Задачи</RouterLink>
+      <div class='header-divider'></div>
+      <RouterLink to='/categories' :class="{'active-link': !currentPageTodo, 'line': true}">Категории</RouterLink>
     </nav>
-    <div class="header-btns">
-      <button-add v-if="currentPageTodo" :onClick="openMainModal">Добавить задачу</button-add>
-      <button-add v-else :onClick="openMainModal">Добавить категорию</button-add>
+    <div class='header-btns'>
+      <AddButton v-if='currentPageTodo' :onClick='openMainModal'>Добавить задачу</AddButton>
+      <AddButton v-else :onClick='openMainModal'>Добавить категорию</AddButton>
     </div>
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from 'vue';
+<script setup lang='ts'>
+import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
-import { useModalMainStore } from '@/store/useModalMainStore';
-import ButtonAdd from '@/UI/ButtonAdd.vue';
+import { useMainModalStore } from '@/store/useMainModalStore';
+import AddButton from '@/UI/AddButton.vue';
 import { PAGE_CATEGORIES } from '@/constants/constants';
 
-export default defineComponent({
-  name: "HeaderSection",
-  components: {
-    ButtonAdd,
-  },
-  setup() {
-    const route = useRoute();
-    const modalStore = useModalMainStore();
-    const { isModalOpen } = storeToRefs(modalStore);
+const route = useRoute();
+const modalStore = useMainModalStore();
+const { isModalOpen } = storeToRefs(modalStore);
 
-    // показываем модальное окно добавления задачи/категории
-    const openMainModal = () => {
-      modalStore.openMainModal(isModalOpen.value);
-    }
+// показываем модальное окно добавления задачи/категории
+const openMainModal = () => {
+  modalStore.openMainModal(isModalOpen.value);
+}
 
-    // для отображения кнопок добавить задачу/категорию
-    const currentPageTodo = computed(() => route.path !== PAGE_CATEGORIES);
-
-    return { 
-      currentPageTodo,
-      isModalOpen,
-      openMainModal,
-    }
-  },
-});
+// для отображения кнопок добавить задачу/категорию
+const currentPageTodo = computed(() => route.path !== PAGE_CATEGORIES);
 </script>
 
-<style lang="scss">
+<style lang='scss'>
 .header {
   position: sticky;
   top: 0;
@@ -79,7 +65,7 @@ export default defineComponent({
 
 .header-divider {
   margin: 5px 9px 0px 9px;
-  background-image: url("../assets/headerDivider.svg");
+  background-image: url('@/assets/headerDivider.svg');
   background-repeat: no-repeat;
   background-size: contain;
   width: 2px;

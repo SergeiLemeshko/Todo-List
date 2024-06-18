@@ -4,16 +4,8 @@
   </div>
 </template>
 
-<script lang='ts'>
-import { defineComponent } from 'vue';
+<script setup lang='ts'>
 import CategoriesList from '@/components/CategoriesList.vue';
-
-export default defineComponent({
-  name: 'CategoriesView',
-  components: {
-    CategoriesList,
-  },
-});
 </script>
 
 <style scooped lang='scss'>

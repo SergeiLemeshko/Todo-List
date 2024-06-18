@@ -4,7 +4,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'todo',
-    component: () => import('@/views/TodoView.vue')
+    component: () => import('@/views/TodosView.vue')
   },
   {
     path: '/categories',

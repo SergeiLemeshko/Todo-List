@@ -11,3 +11,5 @@ export interface Task {
   categoryId: number;
   categoryName?: string;
 }
+
+export type ValueForCommonItem = Omit<Task, 'description' | 'categoryId'> & { description?: string };

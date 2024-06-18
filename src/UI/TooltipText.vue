@@ -1,96 +1,75 @@
 <template>
   <div 
-    class="tooltip-wrapper" 
-    @mouseenter="showTooltip" 
-    @mouseleave="hideTooltip"
+    class='tooltip-wrapper' 
+    @mouseenter='showTooltip' 
+    @mouseleave='hideTooltip'
   >
     <span :class="{ 'truncated-text': shouldTruncate }">
       {{ displayText }}
     </span>
-    <transition name="tooltip-fade">
-      <div v-if="showTooltipWindow" class="tooltip">
+    <transition name='tooltip-fade'>
+      <div v-if='showTooltipWindow' class='tooltip'>
         {{ props.text }}
       </div>
     </transition>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, PropType, ref } from 'vue';
+<script setup lang='ts'>
+import { defineProps, withDefaults, computed, ref } from 'vue';
 import { TruncateLength } from '@/enums/enums';
 
-export default defineComponent({
-  name: 'TooltipText',
-  props: {
-    text: {
-      type: String as PropType<string>,
-      required: true,
-    },
-    isShort: {
-      type: Boolean,
-      default: false,
-    },
-    isShortCat: {
-      type: Boolean,
-      default: false,
-    },
-    isMedium: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props) {
-    // контролирует отображение всплывающего окна
-    const showTooltipWindow = ref<boolean>(false);
-    
-    // определяет, нужно ли обрезать текст
-    const shouldTruncate = computed(() => {
-      if ((props.isShort || props.isShortCat || props.isMedium) && props.text.length >= TruncateLength.ShortCat) {
-        return true;
-      }
-      return props.text.length >= TruncateLength.Default;
-    });
-
-    // возвращающее либо полный текст, либо обрезанный с многоточием
-    const displayText = computed(() => {
-      if (shouldTruncate.value) {
-        switch (true) {
-          case props.isMedium:
-            return `${props.text.slice(0, TruncateLength.Medium)}...`;
-          case props.isShort:
-            return `${props.text.slice(0, TruncateLength.Short)}...`;
-          case props.isShortCat:
-            return `${props.text.slice(0, TruncateLength.ShortCat)}...`;
-          default:
-            return `${props.text.slice(0, TruncateLength.Default)}...`;
-        }
-      }
-      return props.text;
-    });
-
-    // показывает всплывающее окно
-    const showTooltip = () => {
-      if(shouldTruncate.value) showTooltipWindow.value = true;
-    };
-
-    // скрывает всплывающее окно
-    const hideTooltip = () => {
-      showTooltipWindow.value = false;
-    };
-
-    return {
-      showTooltipWindow,
-      shouldTruncate,
-      displayText,
-      props,
-      showTooltip,
-      hideTooltip,
-    };
-  },
+const props = withDefaults(defineProps<{
+  text: string;
+  isShort?: boolean;
+  isShortCat?: boolean;
+  isMedium?: boolean;
+}>(), {
+  isShort: false,
+  isShortCat: false,
+  isMedium: false,
 });
+
+// контролирует отображение всплывающего окна
+const showTooltipWindow = ref<boolean>(false);
+
+// определяет, нужно ли обрезать текст
+const shouldTruncate = computed(() => {
+  if ((props.isShort || props.isShortCat || props.isMedium) && props.text.length >= TruncateLength.ShortCat) {
+    return true;
+  }
+  return props.text.length >= TruncateLength.Default;
+});
+
+// возвращающее либо полный текст, либо обрезанный с многоточием
+const displayText = computed(() => {
+  if (shouldTruncate.value) {
+    switch (true) {
+      case props.isMedium:
+        return `${props.text.slice(0, TruncateLength.Medium)}...`;
+      case props.isShort:
+        return `${props.text.slice(0, TruncateLength.Short)}...`;
+      case props.isShortCat:
+        return `${props.text.slice(0, TruncateLength.ShortCat)}...`;
+      default:
+        return `${props.text.slice(0, TruncateLength.Default)}...`;
+    }
+  }
+  return props.text;
+});
+
+// показывает всплывающее окно
+const showTooltip = () => {
+  if(shouldTruncate.value) showTooltipWindow.value = true;
+};
+
+// скрывает всплывающее окно
+const hideTooltip = () => {
+  showTooltipWindow.value = false;
+};
 </script>
 
-<style scoped lang="scss">
+<style scoped lang='scss'>
 .tooltip-wrapper {
   position: relative;
   display: inline-block;

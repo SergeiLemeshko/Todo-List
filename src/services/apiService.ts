@@ -9,7 +9,7 @@ async function request<T, B = undefined>(
     method,
     headers: {
       Accept: 'application/json',
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: body ? JSON.stringify(body) : undefined, // если body присутствует, преобразуем в строку JSON и добавляется к запросу, иначе undefined
   });
