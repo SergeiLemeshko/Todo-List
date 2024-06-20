@@ -1,0 +1,132 @@
+<template>
+  <section class='header'>
+    <h1 class='header-logo'>ToDo List</h1>
+    <nav class='header-nav'>
+      <RouterLink to='/' :class="{'active-link': currentPageTodo, 'line': true}">Задачи</RouterLink>
+      <div class='header-divider'></div>
+      <RouterLink to='/categories' :class="{'active-link': !currentPageTodo, 'line': true}">Категории</RouterLink>
+    </nav>
+    <div class='header-btns'>
+      <CommonButton 
+        v-if='currentPageTodo' 
+        buttonType='add' 
+        :onClick='openMainModal'
+      >
+        Добавить задачу
+      </CommonButton>
+      <CommonButton 
+        v-else 
+        buttonType='add' 
+        :onClick='openMainModal'
+      >
+        Добавить категорию
+      </CommonButton>
+    </div>
+  </section>
+</template>
+
+<script setup lang='ts'>
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router';
+import { useMainModalStore } from '@/store/useMainModalStore';
+import CommonButton from '@/UI/CommonButton.vue';
+import { PAGE_CATEGORIES } from '@/constants/constants';
+
+const route = useRoute();
+const modalStore = useMainModalStore();
+const { isModalOpen } = storeToRefs(modalStore);
+
+// показываем модальное окно добавления задачи/категории
+const openMainModal = () => {
+  modalStore.openMainModal(isModalOpen.value);
+}
+
+// для отображения кнопок добавить задачу/категорию
+const currentPageTodo = computed(() => route.path !== PAGE_CATEGORIES);
+</script>
+
+<style lang='scss'>
+.header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  height: 88px;
+  width: 100%;
+  z-index: 2;
+  background-color: #3F72AF;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.19), 0 5px 6px rgba(0, 0, 0, 0.23);
+
+  &-logo {
+    font-size: 36px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    margin-left: 25px;
+    color: #FFFFFF;
+  }
+
+  &-nav {
+    display: flex;
+    align-items: center;
+    margin-left: 65px;
+    font-size: 24px;
+    font-weight: 400;
+  }
+}
+
+.header-divider {
+  margin: 5px 9px 0px 9px;
+  background-image: url('@/assets/headerDivider.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 2px;
+  height: 28px;
+}
+
+a { 
+  text-decoration: none;
+  font-size: 24px;
+  font-weight: 400;
+  color: #DBE2EF;
+}
+
+a:hover {
+	color: #FFFFFF;
+  transition: all .3s;
+}
+
+/* состояние при переключении кнопок Задачи/Категории */
+.active-link {
+  color: #8FB6FF;
+  position: relative;
+  display: inline-block;
+  transition: all .3s;
+}
+
+/* состояние линии подчеркивания при переключении кнопок Задачи/Категории */
+.line {
+  position: relative;
+  text-decoration: none;
+}
+
+.line::after {
+  content: '';
+  position: absolute;
+  top: 25px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.5px;
+  background-color: currentColor;
+  bottom: -2px;
+  left: 0;
+}
+
+.header-btns {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 30px;
+}
+</style>
