@@ -3,7 +3,7 @@
     <div class='modal-content'>
       <div class='modal-content__header'>
         <h3>{{ title }}</h3>
-        <CloseButton :onClick='cancel' />
+        <CommonButton buttonType='close' :onClick='cancel' />
       </div>
       <div class='question'>
         <TooltipText :text='message' :isMedium='true'>
@@ -11,8 +11,22 @@
         </TooltipText>
       </div>
       <div class='modal-content__buttons'>
-        <MainButton size='small' color='blue' :onClick='confirm'>Да</MainButton>
-        <MainButton size='small' color='white' :onClick='cancel'>Нет</MainButton>
+        <CommonButton 
+          buttonType="main" 
+          size='small' 
+          color='blue' 
+          :onClick='confirm'
+        >
+          Да
+        </CommonButton>
+        <CommonButton 
+          buttonType="main" 
+          size='small' 
+          color='white' 
+          :onClick='cancel'
+        >
+          Нет
+        </CommonButton>
       </div>
     </div>
   </div>
@@ -21,8 +35,7 @@
 <script setup lang='ts'>
 import { defineProps, defineExpose, ref } from 'vue';
 import { useBodyClass } from '@/composables/useBodyClass';
-import CloseButton from '@/UI/CloseButton.vue';
-import MainButton from '@/UI/MainButton.vue';
+import CommonButton from '@/UI/CommonButton.vue';
 import TooltipText from '@/UI/TooltipText.vue';
 
 const props = defineProps<{

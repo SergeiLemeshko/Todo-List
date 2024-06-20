@@ -7,8 +7,20 @@
       <RouterLink to='/categories' :class="{'active-link': !currentPageTodo, 'line': true}">Категории</RouterLink>
     </nav>
     <div class='header-btns'>
-      <AddButton v-if='currentPageTodo' :onClick='openMainModal'>Добавить задачу</AddButton>
-      <AddButton v-else :onClick='openMainModal'>Добавить категорию</AddButton>
+      <CommonButton 
+        v-if='currentPageTodo' 
+        buttonType='add' 
+        :onClick='openMainModal'
+      >
+        Добавить задачу
+      </CommonButton>
+      <CommonButton 
+        v-else 
+        buttonType='add' 
+        :onClick='openMainModal'
+      >
+        Добавить категорию
+      </CommonButton>
     </div>
   </section>
 </template>
@@ -18,7 +30,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import { useMainModalStore } from '@/store/useMainModalStore';
-import AddButton from '@/UI/AddButton.vue';
+import CommonButton from '@/UI/CommonButton.vue';
 import { PAGE_CATEGORIES } from '@/constants/constants';
 
 const route = useRoute();

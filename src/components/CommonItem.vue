@@ -37,16 +37,15 @@
       </div>
     </section>
     <section class='todo-btns'>
-      <EditButton :openMainModal='openMainModal' />
-      <DeleteButton :onDeleteItem='handleDeleteBtn' />
+      <CommonButton buttonType="edit" :onClick='openMainModal' />
+      <CommonButton buttonType="delete" :onClick='handleDeleteBtn' />
     </section>
   </li>
 </template>
 
 <script setup lang='ts'>
 import { defineProps, withDefaults } from 'vue';
-import DeleteButton from '@/UI/DeleteButton.vue';
-import EditButton from '@/UI/EditButton.vue';
+import CommonButton from '@/UI/CommonButton.vue';
 import TooltipText from '@/UI/TooltipText.vue';
 import { ValueForCommonItem } from '@/interfaces/interfaces';
 

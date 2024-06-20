@@ -3,7 +3,7 @@
     <div class='modal-content'>
       <div class='modal-content__header'>
         <h3>{{ title }}</h3>
-        <CloseButton :onClick='closeThisModal' />
+        <CommonButton buttonType='close' :onClick='closeThisModal' />
       </div>
       <form @submit.prevent='submitForm'>
         <div class='modal-content__medium'>
@@ -41,8 +41,22 @@
           <p v-if='isInvalidDesc' class='modal-content__bottom-desc'>Описание должно быть менее {{ numOfCharacters }} символов</p>
         </div>
         <div class='modal-content__btns'>
-          <MainButton type='submit' size='medium' color='blue'>{{ nameBtn }}</MainButton>
-          <MainButton size='small' color='white' :onClick='closeThisModal'>Закрыть</MainButton>
+          <CommonButton 
+            buttonType='main' 
+            type='submit' 
+            size='medium' 
+            color='blue'
+          >
+            {{ nameBtn }}
+          </CommonButton>
+          <CommonButton 
+            buttonType='main' 
+            size='small'
+            color='white' 
+            :onClick='closeThisModal'
+          >
+            Закрыть
+          </CommonButton>
         </div>
       </form>
     </div>
@@ -57,8 +71,7 @@ import { useMainModalStore } from '@/store/useMainModalStore';
 import { Category, Task } from '@/interfaces/interfaces';
 import { useNameValidation, useDescriptionValidation } from '@/composables/useValidation';
 import CategorySelect from '@/UI/CategorySelect.vue';
-import CloseButton from '@/UI/CloseButton.vue';
-import MainButton from '@/UI/MainButton.vue';
+import CommonButton from '@/UI/CommonButton.vue';
 import { fetchData } from '@/services/apiRequests';
 import { 
   DESCRIPTION_MAX_LENGTH, 
